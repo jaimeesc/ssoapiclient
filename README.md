@@ -26,9 +26,12 @@ positional arguments:
 
 optional arguments:
   -h, --help        show this help message and exit
+  
   -u USER_NAME      User name to login. Required for logins, optional for
                     logout.
+  
   -d USER_DOMAIN    User's FQDN or NETBIOS domain name. Optional. SonicOS will
                     still check LDAP if enabled.
+  
   -r LOGOUT_REASON  Reason for logout. Optional. SonicOS uses this for logging
                     only.

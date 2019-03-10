@@ -20,12 +20,16 @@ SonicOS. That feature is not to be configured with the SonicOS API, which this
 client does not support.
 
 positional arguments:
-  user_action       "add" to send login, "delete" for log out, and "options"
+
+user_action       "add" to send login, "delete" for log out, and "options"
                     for parameters.
-  user_ip           The host IP to login
+
+user_ip           The host IP to login
+
 
 optional arguments:
-  -h, --help        show this help message and exit
+
+-h, --help        show this help message and exit
   
   -u USER_NAME      User name to login. Required for logins, optional for
                     logout.

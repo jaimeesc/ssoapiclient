@@ -1,8 +1,6 @@
 # ssoapiclient
 SonicWall SSO API client
 
-Version 1.0.7 08-16-18
-
 Special thanks to John-Michael Denton and Ian Puleston.
 Their help was instrumental in getting the security layer figured out.
 

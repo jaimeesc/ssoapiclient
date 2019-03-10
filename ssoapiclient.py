@@ -341,30 +341,6 @@ def print_response(req):
                         print("Enable the Authenticator in the client or set the shared secret security level to Low in SonicOS.")
 
 
-# Interactive mode function.
-# Command line switch -i
-def intro():
-	global user_action
-	user_action = ""
-	print("--------------")
-	print("Interactive Mode")
-	print("--------------")
-	print("Usage:")
-	print("  'add' to log a user in.")
-	print("  'delete' to log out the user at the specified IP.")
-	print("  Type 'options' to see a list of all API params.")
-	print("--------------\n")
-	while user_action == "":
-		user_action = input('Enter add, delete, or options.> ').lower();
-
-# Input prompts for interactive mode
-# While there is no user action set, present the intro.
-# Added the if statement 5-19-2018
-# 6-22-2018:
-# --Made corrections to the code below for interactive mode.
-# --Removed old code and merged a couple blocks of code together
-# --Added .lower() method user action to prevent case sensitivity.
-
 # Argument parser code -- This handles the cli switches using the argparser module.
 cliparser = argparse.ArgumentParser(description='SSO API Client integrates with the 3rd-Party Single-Sign-On API feature in SonicOS. That feature is not to be configured with the SonicOS API, which this client does not support.')
 cliparser.add_argument('user_action', metavar='user_action', type=str, help='"add" to send login, "delete" for log out, and "options" for parameters.')
@@ -404,90 +380,7 @@ elif cliargs.user_action is not "add" or "delete" or "options":
 	print("User action must be add, delete, or options.")
 	exit()
 
-if len(sys.argv) == 1:
-	# If no arguments are passed the script quits.
-	print("No arguments passed. Pass arguments or use interactive mode.")
-	print("Use the -i argument to start interactive mode.")
-	exit()
-elif len(sys.argv) > 1:
-	user_action = sys.argv[1].lower() # Sets user_action to the first passed arg
-	interactive_mode = False # An arg was passed so interactive is off
-	if sys.argv[1] == "-i": # If user passes -i argument...
-		interactive_mode = True # Set interactive mode flag
-		intro() # Go to interactive mode
-
 # If user action is options, request all params from API.
-# If interactive mode is on, go back to intro(), else exit script
 if user_action == "options":
 	req_all_params()
 	user_action = ""
-	if interactive_mode == True:
-		intro()
-	else:
-		exit()
-
-# If interactive mode is on...
-# Prompt for IP if blank or space.
-if interactive_mode == True:
-	while user_ip == "" or user_ip == " ": # While no user ip is set
-		print('\nThe user IP address is required.\n')
-		user_ip = input('User IP Address: ') # Ask for user input
-		print("")
-		# Conditionally tell the user about entering the user name
-	if user_action == "add":
-		print("Enter the user name only (no domain).")
-	if user_action == "delete":
-		print("Optionally, enter user name for logging purposes.")
-	user_name = input('User Name: ') # Prompt for user name
-	print("")
-
-# If statements for add and delete
-if interactive_mode == True:
-	if user_action == "add": # If logging a user in
-		while user_name == "": # While entering null user name
-			print('\nThe user name is required for logins.\n') # Warn user
-			user_name = input('User Name: ') # Ask for user input
-
-if interactive_mode == True:
-	if user_action == "delete": # If logging a user out
-		if user_name != "": # If user name is not blank
-			print("\nSending logout command with user info.\n")
-			print("Optionally, enter the domain for logging purposes")
-			user_domain = input('Domain: ')
-			if user_domain == "":
-				user_domain = " "
-				print("\nSending logout command without optional domain component.\n")
-		elif user_name == "" or user_name == " ": # Else if user name blank
-			print("\nSending logout command without user info.\n")
-			user_name = " "
-			user_domain = " "
-		#Ask for logout reason
-		print("Optionally, enter a reason for logging this user out.")
-		logout_reason = input('Reason for log out (optional): ')
-		if logout_reason == "":
-			logout_reason = " "
-		update_json(user_action)
-		push_logout()
-		exit()
-
-#Continue logging user in...
-if interactive_mode == True:
-	if user_name != "":
-		print("")
-		print("Input the domain name (FQDN or NETBIOS name).")
-		print("If no domain is given the user will be looked up via LDAP if enabled.")
-		user_domain = input('Domain (optional): ')
-
-if interactive_mode == True:
-	if user_domain != "":
-		print("Domain:", user_domain + ". Setting domain user type.")
-		user_type = "domain"
-		update_json(user_action)
-		push_login()
-		exit()
-	else:
-		user_domain = ""
-		user_type = "domain"
-		update_json(user_action)
-		push_login()
-		exit()
